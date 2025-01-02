@@ -1,5 +1,7 @@
 package org.example;
 
+import org.example.domain.MinesweeperGame;
+
 import java.util.Scanner;
 
 public class Main {

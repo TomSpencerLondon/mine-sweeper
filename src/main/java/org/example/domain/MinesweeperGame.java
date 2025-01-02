@@ -1,11 +1,11 @@
-package org.example;
+package org.example.domain;
 
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-class MinesweeperGame {
+public class MinesweeperGame {
     private final List<List<Character>> minefield;
     private final int rows;
     private final int cols;
