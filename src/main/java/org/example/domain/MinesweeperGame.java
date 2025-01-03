@@ -3,17 +3,18 @@ package org.example.domain;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class MinesweeperGame {
     private final List<List<Character>> minefield;
     private final int rows;
     private final int cols;
+    private final MineGenerator mineGenerator;
 
-    public MinesweeperGame(int rows, int cols, int numMines) {
+    public MinesweeperGame(int rows, int cols, MineGenerator mineGenerator) {
         this.rows = rows;
         this.cols = cols;
-        this.minefield = createMinefield(rows, cols, numMines);
+        this.mineGenerator = mineGenerator;
+        this.minefield = createMinefield(rows, cols, this.mineGenerator.numMines());
     }
 
     private List<List<Character>> createMinefield(int rows, int cols, int numMines) {
@@ -27,11 +28,10 @@ public class MinesweeperGame {
             minefield.add(row);
         }
 
-        Random random = new Random();
         int minesPlaced = 0;
         while (minesPlaced < numMines) {
-            int row = random.nextInt(rows);
-            int col = random.nextInt(cols);
+            int row = mineGenerator.next(rows);
+            int col = mineGenerator.next(cols);
             if (minefield.get(row).get(col) == '.') {
                 minefield.get(row).set(col, 'X');
                 minesPlaced++;
@@ -59,6 +59,8 @@ public class MinesweeperGame {
 
     public void displayMinefieldWithHints() {
         List<List<Character>> hintField = new ArrayList<>();
+
+        System.out.println();
 
         for (int i = 0; i < rows; i++) {
             List<Character> row = new ArrayList<>();

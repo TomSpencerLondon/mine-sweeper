@@ -1,7 +1,9 @@
 package org.example;
 
+import org.example.domain.MineGenerator;
 import org.example.domain.MinesweeperGame;
 
+import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
@@ -13,7 +15,9 @@ public class Main {
         System.out.print("How many mines do you want on the field? > ");
         int numMines = scanner.nextInt();
 
-        MinesweeperGame game = new MinesweeperGame(rows, cols, numMines);
+        MineGenerator mineGenerator = new MineGenerator(numMines, new Random());
+
+        MinesweeperGame game = new MinesweeperGame(rows, cols, mineGenerator);
         game.displayMinefieldWithHints();
     }
 }
