@@ -2,6 +2,7 @@ package org.example.hexagon.application;
 
 
 import org.example.adapter.out.console.RandomMineGenerator;
+import org.example.hexagon.application.port.MineGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,9 +11,9 @@ public class MineSweeperService {
     private final List<List<Character>> minefield;
     private final int rows;
     private final int cols;
-    private final RandomMineGenerator randomMineGenerator;
+    private final MineGenerator randomMineGenerator;
 
-    public MineSweeperService(int rows, int cols, RandomMineGenerator randomMineGenerator) {
+    public MineSweeperService(int rows, int cols, MineGenerator randomMineGenerator) {
         this.rows = rows;
         this.cols = cols;
         this.randomMineGenerator = randomMineGenerator;
