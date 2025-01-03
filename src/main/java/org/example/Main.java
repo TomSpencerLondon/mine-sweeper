@@ -1,6 +1,6 @@
 package org.example;
 
-import org.example.hexagon.domain.MineGenerator;
+import org.example.adapter.out.console.RandomMineGenerator;
 import org.example.hexagon.application.MineSweeperService;
 
 import java.util.Random;
@@ -15,9 +15,9 @@ public class Main {
         System.out.print("How many mines do you want on the field? > ");
         int numMines = scanner.nextInt();
 
-        MineGenerator mineGenerator = new MineGenerator(numMines, new Random());
+        RandomMineGenerator randomMineGenerator = new RandomMineGenerator(numMines, new Random());
 
-        MineSweeperService game = new MineSweeperService(rows, cols, mineGenerator);
+        MineSweeperService game = new MineSweeperService(rows, cols, randomMineGenerator);
         game.displayMinefieldWithHints();
     }
 }

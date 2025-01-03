@@ -1,7 +1,7 @@
 package org.example.hexagon.application;
 
 
-import org.example.hexagon.domain.MineGenerator;
+import org.example.adapter.out.console.RandomMineGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,13 +10,13 @@ public class MineSweeperService {
     private final List<List<Character>> minefield;
     private final int rows;
     private final int cols;
-    private final MineGenerator mineGenerator;
+    private final RandomMineGenerator randomMineGenerator;
 
-    public MineSweeperService(int rows, int cols, MineGenerator mineGenerator) {
+    public MineSweeperService(int rows, int cols, RandomMineGenerator randomMineGenerator) {
         this.rows = rows;
         this.cols = cols;
-        this.mineGenerator = mineGenerator;
-        this.minefield = createMinefield(rows, cols, this.mineGenerator.numMines());
+        this.randomMineGenerator = randomMineGenerator;
+        this.minefield = createMinefield(rows, cols, this.randomMineGenerator.numMines());
     }
 
     private List<List<Character>> createMinefield(int rows, int cols, int numMines) {
@@ -32,8 +32,8 @@ public class MineSweeperService {
 
         int minesPlaced = 0;
         while (minesPlaced < numMines) {
-            int row = mineGenerator.next(rows);
-            int col = mineGenerator.next(cols);
+            int row = randomMineGenerator.next(rows);
+            int col = randomMineGenerator.next(cols);
             if (minefield.get(row).get(col) == '.') {
                 minefield.get(row).set(col, 'X');
                 minesPlaced++;

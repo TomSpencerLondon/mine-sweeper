@@ -1,12 +1,14 @@
-package org.example.hexagon.domain;
+package org.example.adapter.out.console;
+
+import org.example.hexagon.application.port.MineGenerator;
 
 import java.util.Random;
 
-public class MineGenerator {
+public class RandomMineGenerator implements MineGenerator {
     private final int numMines;
     private final Random random;
 
-    public MineGenerator(int numMines, Random random) {
+    public RandomMineGenerator(int numMines, Random random) {
         this.numMines = numMines;
         this.random = random;
     }

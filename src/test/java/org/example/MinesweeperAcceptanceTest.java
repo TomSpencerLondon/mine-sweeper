@@ -1,6 +1,6 @@
 package org.example;
 
-import org.example.hexagon.domain.MineGenerator;
+import org.example.adapter.out.console.RandomMineGenerator;
 import org.example.hexagon.application.MineSweeperService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -84,9 +84,9 @@ public class MinesweeperAcceptanceTest {
             System.out.print("How many mines do you want on the field? > ");
             int numMines = scanner.nextInt();
 
-            MineGenerator mineGenerator = new MineGenerator(numMines, random);
+            RandomMineGenerator randomMineGenerator = new RandomMineGenerator(numMines, random);
 
-            MineSweeperService game = new MineSweeperService(rows, cols, mineGenerator);
+            MineSweeperService game = new MineSweeperService(rows, cols, randomMineGenerator);
             game.displayMinefieldWithHints();
         }
     }
