@@ -1,23 +1,24 @@
 package org.example.adapter.out.console;
 
 import org.example.hexagon.application.port.MineGenerator;
+import org.example.hexagon.domain.Coordinate;
 
-import java.util.Random;
+import java.util.*;
 
 public class RandomMineGenerator implements MineGenerator {
-    private final int numMines;
+    private final int rows;
+    private final int cols;
     private final Random random;
 
-    public RandomMineGenerator(int numMines, Random random) {
-        this.numMines = numMines;
+    public RandomMineGenerator(int rows, int cols, Random random) {
+        this.rows = rows;
+        this.cols = cols;
         this.random = random;
     }
 
-    public int numMines() {
-        return numMines;
-    }
-
-    public int next(int seed) {
-        return random.nextInt(seed);
+    public Coordinate next() {
+        int row = random.nextInt(rows);
+        int column = random.nextInt(cols);
+        return new Coordinate(row, column);
     }
 }

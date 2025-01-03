@@ -1,7 +1,13 @@
 package org.example;
 
+import org.example.adapter.out.console.CellPrinter;
+import org.example.adapter.out.console.CoordinateValidator;
+import org.example.adapter.out.console.MineSweeperController;
 import org.example.adapter.out.console.RandomMineGenerator;
 import org.example.hexagon.application.MineSweeperService;
+import org.example.hexagon.application.port.MineGenerator;
+import org.example.hexagon.domain.Coordinate;
+import org.example.hexagon.domain.Grid;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -20,7 +26,7 @@ import static org.mockito.Mockito.when;
 public class MinesweeperAcceptanceTest {
 
     @Mock
-    private static Random random;
+    private static MineGenerator mineGenerator;
 
 
 
@@ -29,8 +35,11 @@ public class MinesweeperAcceptanceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        when(random.nextInt(anyInt()))
-                .thenReturn(2, 2, 5, 5, 7, 7);
+        when(mineGenerator.next())
+                .thenReturn(
+                        new Coordinate(2, 2),
+                        new Coordinate(5, 5),
+                        new Coordinate(7, 7));
         outputStream = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outputStream));
     }
@@ -84,10 +93,13 @@ public class MinesweeperAcceptanceTest {
             System.out.print("How many mines do you want on the field? > ");
             int numMines = scanner.nextInt();
 
-            RandomMineGenerator randomMineGenerator = new RandomMineGenerator(numMines, random);
+            Grid grid = new Grid(numMines, mineGenerator, new CoordinateValidator(rows, cols));
 
-            MineSweeperService game = new MineSweeperService(rows, cols, randomMineGenerator);
-            game.displayMinefieldWithHints();
+            MineSweeperService mineSweeperService = new MineSweeperService(grid);
+            CellPrinter printer = new CellPrinter(rows, cols);
+            MineSweeperController mineSweeperController = new MineSweeperController(mineSweeperService, printer);
+
+            mineSweeperController.displayCells();
         }
     }
 }
