@@ -1,4 +1,4 @@
-package org.example.domain;
+package org.example.hexagon.domain;
 
 public class Cell {
     private State state;

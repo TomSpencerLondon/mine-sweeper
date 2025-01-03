@@ -1,16 +1,18 @@
-package org.example.domain;
+package org.example.hexagon.application;
 
+
+import org.example.hexagon.domain.MineGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MinesweeperGame {
+public class MineSweeperService {
     private final List<List<Character>> minefield;
     private final int rows;
     private final int cols;
     private final MineGenerator mineGenerator;
 
-    public MinesweeperGame(int rows, int cols, MineGenerator mineGenerator) {
+    public MineSweeperService(int rows, int cols, MineGenerator mineGenerator) {
         this.rows = rows;
         this.cols = cols;
         this.mineGenerator = mineGenerator;

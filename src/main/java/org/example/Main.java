@@ -1,7 +1,7 @@
 package org.example;
 
-import org.example.domain.MineGenerator;
-import org.example.domain.MinesweeperGame;
+import org.example.hexagon.domain.MineGenerator;
+import org.example.hexagon.application.MineSweeperService;
 
 import java.util.Random;
 import java.util.Scanner;
@@ -17,7 +17,7 @@ public class Main {
 
         MineGenerator mineGenerator = new MineGenerator(numMines, new Random());
 
-        MinesweeperGame game = new MinesweeperGame(rows, cols, mineGenerator);
+        MineSweeperService game = new MineSweeperService(rows, cols, mineGenerator);
         game.displayMinefieldWithHints();
     }
 }
