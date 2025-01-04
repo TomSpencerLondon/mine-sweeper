@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-public class CoordinatorValidator {
+public class CoordinatorValidatorTest {
     @Test
     void coordinateWithZeroColumnShouldReturnFalse() {
         CoordinateValidator coordinateValidator = new CoordinateValidator(9, 9);
