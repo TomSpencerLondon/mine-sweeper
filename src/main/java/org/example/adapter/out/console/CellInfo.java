@@ -16,7 +16,7 @@ public class CellInfo {
             return new CellInfo(Integer.toString(cell.neighbourCount()));
         }
 
-        return new CellInfo(".");
+        return new CellInfo(cell.isMarked() ? "*" : ".");
     }
 
     public String display() {

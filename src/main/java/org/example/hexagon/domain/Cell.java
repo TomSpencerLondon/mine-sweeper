@@ -63,6 +63,12 @@ public class Cell {
     }
 
     public void mark() {
-        visibility = Visibility.MARKED;
+        visibility = this.visibility == Visibility.MARKED ?
+                Visibility.HIDDEN :
+                Visibility.MARKED;
+    }
+
+    public boolean isEmpty() {
+        return cellType == CellType.EMPTY;
     }
 }

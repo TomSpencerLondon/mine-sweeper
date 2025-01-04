@@ -12,6 +12,7 @@ import org.mockito.MockitoAnnotations;
 import java.util.Iterator;
 import java.util.List;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -108,5 +109,21 @@ class GridTest {
             }
             System.out.println();
         }
+    }
+
+    @Test
+    void givenOneMineIncorrectThenCorrectMarkingReturnsWinner() {
+        when(mineGenerator.next())
+                .thenReturn(
+                        new Coordinate(1, 2)
+                );
+        grid = new Grid(1, mineGenerator, new CoordinateValidator(9, 9));
+
+        grid.mark(new Coordinate(4, 8));
+        grid.mark(new Coordinate(1, 2));
+        grid.mark(new Coordinate(4, 8));
+
+        assertThat(grid.hasWon())
+                .isTrue();
     }
 }

@@ -11,7 +11,6 @@ public class Grid {
     private List<Cell> cells;
     List<Coordinate> mines;
 
-    Map<Coordinate, MineStatus> mineStates;
     Map<Coordinate, Integer> neighbours;
     int totalMines;
 
@@ -22,19 +21,7 @@ public class Grid {
         this.mines = createMines();
         this.neighbours = createNeighbours();
         this.cells = createCells();
-        this.mineStates = createMineStates();
     }
-
-    private Map<Coordinate, MineStatus> createMineStates() {
-        Map<Coordinate, MineStatus> result = new HashMap<>();
-
-        for (Coordinate mine : mines) {
-            result.put(mine, MineStatus.UNMARKED);
-        }
-
-        return result;
-    }
-
     public List<Cell> cells() {
         return cells;
     }
@@ -107,14 +94,21 @@ public class Grid {
     }
 
     public boolean hasWon() {
-        return mineStates.values()
-                .stream()
-                .allMatch(MineStatus.MARKED);
+        for (Cell cell : cells) {
+            if (cell.isEmpty() && cell.isMarked()) {
+                return false;
+            }
+            if (cell.isMine() && !cell.isMarked()) {
+                return false;
+            }
+        }
+
+
+
+        return true;
     }
 
     public void mark(Coordinate coordinate) {
-        mineStates.put(coordinate, MineStatus.MARKED);
-
         cells.stream().filter(cell -> cell.coordinate().equals(coordinate))
                 .findFirst()
                 .ifPresent(Cell::mark);
