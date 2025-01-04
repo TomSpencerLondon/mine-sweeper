@@ -8,7 +8,7 @@ import java.util.*;
 public class Grid {
     private final MineGenerator mineGenerator;
     private final CoordinateValidator validator;
-    private final List<Cell> cells;
+    private List<Cell> cells;
     List<Coordinate> mines;
     Map<Coordinate, Integer> neighbours;
     int totalMines;
@@ -17,7 +17,7 @@ public class Grid {
         this.totalMines = totalMines;
         this.mineGenerator = mineGenerator;
         this.validator = validator;
-        this.mines = new ArrayList<>();
+        this.mines = createMines();
         this.neighbours = new HashMap<>();
         this.cells = new ArrayList<>();
         create();
@@ -35,11 +35,11 @@ public class Grid {
         return validator.totalColumns();
     }
 
-    private void create() {
-        for (int i = 0; i < totalMines; i++) {
-            mines.add(mineGenerator.next());
-        }
+    public List<Coordinate> mines() {
+        return mines;
+    }
 
+    private void create() {
         for (Coordinate mine : mines) {
             for (int i = -1; i <= 1; i++) {
                 for (int j = -1; j <= 1; j++) {
@@ -62,17 +62,29 @@ public class Grid {
         }
 
 
-        for (int row = 0; row < rowSize(); row++) {
-            for (int col = 0; col < columnSize(); col++) {
+        for (int row = 1; row <= rowSize(); row++) {
+            for (int col = 1; col <= columnSize(); col++) {
                 Cell cell = new Cell(new Coordinate(row, col), State.EMPTY, 0, Visibility.HIDDEN);
 
-                if (!cells.contains(cell)) {
+                if (validator.isValid(cell.coordinate()) && !cells.contains(cell)) {
                     cells.add(cell);
                 }
             }
         }
 
         cells.sort(Comparator.comparingInt(Cell::row).thenComparingInt(Cell::col));
+    }
 
+    private List<Coordinate> createMines() {
+        List<Coordinate> result = new ArrayList<>();
+        for (int i = 0; i < totalMines; i++) {
+            Coordinate mine = mineGenerator.next();
+
+            if (validator.isValid(mine)) {
+                result.add(mine);
+            }
+        }
+
+        return result;
     }
 }

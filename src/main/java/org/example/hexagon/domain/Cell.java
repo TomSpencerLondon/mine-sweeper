@@ -19,6 +19,10 @@ public class Cell {
         this.visibility = visibility;
     }
 
+    public Coordinate coordinate() {
+        return coordinate;
+    }
+
     public boolean isMine() {
         return state == State.MINE;
     }

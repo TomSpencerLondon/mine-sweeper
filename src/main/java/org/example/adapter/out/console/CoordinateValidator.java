@@ -15,8 +15,8 @@ public class CoordinateValidator implements Validator {
 
     @Override
     public boolean isValid(Coordinate coordinate) {
-        return (coordinate.row() >= 0 && coordinate.row() < totalRows) ||
-                (coordinate.column() >= 0 && coordinate.column() < totalColumns);
+        return (coordinate.row() > 0 && coordinate.row() <= totalRows) &&
+                (coordinate.column() > 0 && coordinate.column() <= totalColumns);
     }
 
     public int totalRows() {

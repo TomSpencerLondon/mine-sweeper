@@ -1,6 +1,19 @@
 package org.example.hexagon.domain;
 
-public record Coordinate(int row, int column) {
+import java.util.Objects;
+
+public final class Coordinate {
+    private final int row;
+    private final int column;
+
+    public Coordinate(int row, int column) {
+//        if (row == 0 || column == 0) {
+//            throw new IllegalArgumentException("Can't have zero row or column. Count is 1 - 9");
+//        }
+
+        this.row = row;
+        this.column = column;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -12,5 +25,26 @@ public record Coordinate(int row, int column) {
         if (row != that.row) return false;
         return column == that.column;
     }
+
+    public int row() {
+        return row;
+    }
+
+    public int column() {
+        return column;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(row, column);
+    }
+
+    @Override
+    public String toString() {
+        return "Coordinate[" +
+                "row=" + row + ", " +
+                "column=" + column + ']';
+    }
+
 
 }
