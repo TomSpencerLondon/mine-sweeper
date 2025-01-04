@@ -11,7 +11,7 @@ public class CellInfo {
 
     public static CellInfo from(Cell cell) {
         if (cell.isMine()) {
-            return new CellInfo("X");
+            return new CellInfo(".");
         } else if (cell.isNeighbour()) {
             return new CellInfo(Integer.toString(cell.neighbourCount()));
         }
