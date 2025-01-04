@@ -1,6 +1,6 @@
 package org.example;
 
-import org.example.adapter.out.console.CellPrinter;
+import org.example.adapter.out.console.GamePrinter;
 import org.example.adapter.out.console.CoordinateValidator;
 import org.example.adapter.out.console.MineSweeperController;
 import org.example.adapter.out.console.RandomMineGenerator;
@@ -11,16 +11,13 @@ import org.example.hexagon.domain.Grid;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.Random;
 import java.util.Scanner;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -138,7 +135,7 @@ public class MinesweeperAcceptanceTest {
             Grid grid = new Grid(numMines, mineGenerator, new CoordinateValidator(rows, cols));
 
             MineSweeperService mineSweeperService = new MineSweeperService(grid);
-            CellPrinter printer = new CellPrinter(rows, cols);
+            GamePrinter printer = new GamePrinter(rows, cols);
             MineSweeperController mineSweeperController = new MineSweeperController(mineSweeperService, printer);
 
             mineSweeperController.displayCells();

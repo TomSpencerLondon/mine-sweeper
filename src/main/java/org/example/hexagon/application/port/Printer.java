@@ -5,5 +5,7 @@ import org.example.adapter.out.console.CellInfo;
 import java.util.List;
 
 public interface Printer {
+    void print(String message);
+
     void print(List<CellInfo> cellInfos);
 }

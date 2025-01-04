@@ -10,6 +10,8 @@ public class Grid {
     private final CoordinateValidator validator;
     private List<Cell> cells;
     List<Coordinate> mines;
+
+    Map<Coordinate, MineStatus> mineStates;
     Map<Coordinate, Integer> neighbours;
     int totalMines;
 
@@ -20,6 +22,17 @@ public class Grid {
         this.mines = createMines();
         this.neighbours = createNeighbours();
         this.cells = createCells();
+        this.mineStates = createMineStates();
+    }
+
+    private Map<Coordinate, MineStatus> createMineStates() {
+        Map<Coordinate, MineStatus> result = new HashMap<>();
+
+        for (Coordinate mine : mines) {
+            result.put(mine, MineStatus.UNMARKED);
+        }
+
+        return result;
     }
 
     public List<Cell> cells() {
@@ -41,16 +54,16 @@ public class Grid {
     private List<Cell> createCells() {
         List<Cell> result = new ArrayList<>();
         for (Map.Entry<Coordinate, Integer> entry : neighbours.entrySet()) {
-            result.add(new Cell(entry.getKey(), State.NUMBER, entry.getValue(), Visibility.HIDDEN));
+            result.add(new Cell(entry.getKey(), CellType.NEIGHBOUR, entry.getValue(), Visibility.HIDDEN));
         }
 
         for (Coordinate mine : mines) {
-            result.add(new Cell(mine, State.MINE, Visibility.HIDDEN));
+            result.add(new Cell(mine, CellType.MINE, Visibility.HIDDEN));
         }
 
         for (int row = 1; row <= rowSize(); row++) {
             for (int col = 1; col <= columnSize(); col++) {
-                Cell cell = new Cell(new Coordinate(row, col), State.EMPTY, 0, Visibility.HIDDEN);
+                Cell cell = new Cell(new Coordinate(row, col), CellType.EMPTY, 0, Visibility.HIDDEN);
 
                 if (validator.isValid(cell.coordinate()) && !result.contains(cell)) {
                     result.add(cell);
@@ -91,5 +104,19 @@ public class Grid {
             }
         }
         return new ArrayList<>(result);
+    }
+
+    public boolean hasWon() {
+        return mineStates.values()
+                .stream()
+                .allMatch(MineStatus.MARKED);
+    }
+
+    public void mark(Coordinate coordinate) {
+        mineStates.put(coordinate, MineStatus.MARKED);
+
+        cells.stream().filter(cell -> cell.coordinate().equals(coordinate))
+                .findFirst()
+                .ifPresent(Cell::mark);
     }
 }

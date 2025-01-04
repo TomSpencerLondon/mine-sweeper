@@ -2,19 +2,19 @@ package org.example.hexagon.domain;
 
 public class Cell {
     private final Coordinate coordinate;
-    private State state;
+    private CellType cellType;
     private int neighbourCount;
-    private final Visibility visibility;
+    private Visibility visibility;
 
-    public Cell(Coordinate coordinate, State state, Visibility visibility) {
+    public Cell(Coordinate coordinate, CellType cellType, Visibility visibility) {
         this.coordinate = coordinate;
-        this.state = state;
+        this.cellType = cellType;
         this.visibility = visibility;
     }
 
-    public Cell(Coordinate coordinate, State state, int neighbourCount, Visibility visibility) {
+    public Cell(Coordinate coordinate, CellType cellType, int neighbourCount, Visibility visibility) {
         this.coordinate = coordinate;
-        this.state = state;
+        this.cellType = cellType;
         this.neighbourCount = neighbourCount;
         this.visibility = visibility;
     }
@@ -24,11 +24,15 @@ public class Cell {
     }
 
     public boolean isMine() {
-        return state == State.MINE;
+        return cellType == CellType.MINE;
+    }
+
+    public boolean isMarked() {
+        return visibility == Visibility.MARKED;
     }
 
     public boolean isNeighbour() {
-        return state == State.NUMBER;
+        return cellType == CellType.NEIGHBOUR;
     }
 
     public int neighbourCount() {
@@ -56,5 +60,9 @@ public class Cell {
 
     public int col() {
         return coordinate.column();
+    }
+
+    public void mark() {
+        visibility = Visibility.MARKED;
     }
 }
