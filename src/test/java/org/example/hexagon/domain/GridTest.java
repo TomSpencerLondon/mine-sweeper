@@ -17,12 +17,14 @@ class GridTest {
     MineGenerator mineGenerator = mock(MineGenerator.class);
 
     Grid grid;
+    GridSize gridSize;
 
     @BeforeEach
     void setUp() {
+        gridSize = new GridSize(9, 9);
         when(mineGenerator.next())
-                .thenReturn(new Coordinate(2, 5), new Coordinate(5, 1));
-        grid = new Grid(2, mineGenerator, new GridSize(9, 9));
+                .thenReturn(new Coordinate(2, 5, gridSize), new Coordinate(5, 1, gridSize));
+        grid = new Grid(2, mineGenerator, gridSize);
     }
 
     @Test
@@ -49,10 +51,10 @@ class GridTest {
     void givenFourMinesShowsCorrectNeighbourCount() {
         when(mineGenerator.next())
                 .thenReturn(
-                        new Coordinate(2, 1),
-                        new Coordinate(5, 4),
-                        new Coordinate(6, 1),
-                        new Coordinate(6, 2)
+                        new Coordinate(2, 1, gridSize),
+                        new Coordinate(5, 4, gridSize),
+                        new Coordinate(6, 1, gridSize),
+                        new Coordinate(6, 2, gridSize)
                 );
         grid = new Grid(4, mineGenerator, new GridSize(9, 9));
 
@@ -78,13 +80,13 @@ class GridTest {
     void givenSevenMinesShouldReturnCorrectNeighbourCount() {
         when(mineGenerator.next())
                 .thenReturn(
-                        new Coordinate(2, 2),
-                        new Coordinate(2, 4),
-                        new Coordinate(2, 7),
-                        new Coordinate(3, 1),
-                        new Coordinate(3, 7),
-                        new Coordinate(6, 6),
-                        new Coordinate(6, 7)
+                        new Coordinate(2, 2, gridSize),
+                        new Coordinate(2, 4, gridSize),
+                        new Coordinate(2, 7, gridSize),
+                        new Coordinate(3, 1, gridSize),
+                        new Coordinate(3, 7, gridSize),
+                        new Coordinate(6, 6, gridSize),
+                        new Coordinate(6, 7, gridSize)
                 );
         grid = new Grid(7, mineGenerator, new GridSize(9, 9));
 
@@ -110,13 +112,13 @@ class GridTest {
     void givenOneMineIncorrectThenCorrectMarkingReturnsWinner() {
         when(mineGenerator.next())
                 .thenReturn(
-                        new Coordinate(1, 2)
+                        new Coordinate(1, 2, gridSize)
                 );
         grid = new Grid(1, mineGenerator, new GridSize(9, 9));
 
-        grid.mark(new Coordinate(4, 8));
-        grid.mark(new Coordinate(1, 2));
-        grid.mark(new Coordinate(4, 8));
+        grid.mark(new Coordinate(4, 8, gridSize));
+        grid.mark(new Coordinate(1, 2, gridSize));
+        grid.mark(new Coordinate(4, 8, gridSize));
 
         assertThat(grid.hasWon())
                 .isTrue();

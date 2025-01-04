@@ -6,12 +6,6 @@ public final class Coordinate {
     private final int row;
     private final int column;
 
-    @Deprecated
-    public Coordinate(int row, int column) {
-        this.row = row;
-        this.column = column;
-    }
-
     public Coordinate(int row, int column, GridSize gridSize) {
         if (!isValid(gridSize, row, column)) {
             throw new InvalidCoordinateException(

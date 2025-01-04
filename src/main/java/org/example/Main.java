@@ -22,8 +22,8 @@ public class Main {
         System.out.print("How many mines do you want on the field? > ");
         int numMines = scanner.nextInt();
 
-        MineGenerator randomMineGenerator = new RandomMineGenerator(rows, cols, new Random());
         GridSize gridSize = new GridSize(rows, cols);
+        MineGenerator randomMineGenerator = new RandomMineGenerator(gridSize, new Random());
         Grid grid = new Grid(numMines, randomMineGenerator, gridSize);
         MineSweeperService mineSweeperService = new MineSweeperService(grid);
         Printer printer = new GamePrinter(rows, cols);

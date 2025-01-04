@@ -2,23 +2,22 @@ package org.example.adapter.out.console;
 
 import org.example.hexagon.application.port.MineGenerator;
 import org.example.hexagon.domain.Coordinate;
+import org.example.hexagon.domain.GridSize;
 
 import java.util.*;
 
 public class RandomMineGenerator implements MineGenerator {
-    private final int rows;
-    private final int cols;
     private final Random random;
+    private final GridSize gridSize;
 
-    public RandomMineGenerator(int rows, int cols, Random random) {
-        this.rows = rows;
-        this.cols = cols;
+    public RandomMineGenerator(GridSize gridSize, Random random) {
+        this.gridSize = gridSize;
         this.random = random;
     }
 
     public Coordinate next() {
-        int row = random.nextInt(1, rows);
-        int column = random.nextInt(1, cols);
-        return new Coordinate(column, row);
+        int row = random.nextInt(1, gridSize.totalRows());
+        int column = random.nextInt(1, gridSize.totalColumns());
+        return new Coordinate(column, row, gridSize);
     }
 }

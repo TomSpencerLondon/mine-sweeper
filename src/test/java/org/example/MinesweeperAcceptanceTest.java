@@ -48,11 +48,12 @@ public class MinesweeperAcceptanceTest {
 
     @Test
     void givenThreeMinesReturnsCorrectOutput() {
+        GridSize gridSize = new GridSize(9, 9);
         when(mineGenerator.next())
                 .thenReturn(
-                        new Coordinate(2, 2),
-                        new Coordinate(5, 5),
-                        new Coordinate(7, 7));
+                        new Coordinate(2, 2, gridSize),
+                        new Coordinate(5, 5, gridSize),
+                        new Coordinate(7, 7, gridSize));
 
         simulateInput("""
                 3
@@ -87,12 +88,13 @@ public class MinesweeperAcceptanceTest {
 
     @Test
     void givenFourMinesReturnsCorrectOutput() {
+        GridSize gridSize = new GridSize(9, 9);
         when(mineGenerator.next())
                 .thenReturn(
-                        new Coordinate(1, 6),
-                        new Coordinate(3, 5),
-                        new Coordinate(5, 7),
-                        new Coordinate(5, 8));
+                        new Coordinate(1, 6, gridSize),
+                        new Coordinate(3, 5, gridSize),
+                        new Coordinate(5, 7, gridSize),
+                        new Coordinate(5, 8, gridSize));
 
         simulateInput("""
                 4
