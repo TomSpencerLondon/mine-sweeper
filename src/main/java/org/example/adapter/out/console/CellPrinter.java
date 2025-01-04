@@ -20,13 +20,17 @@ public class CellPrinter implements Printer {
     public void print(List<CellInfo> cellInfos) {
         Iterator<CellInfo> iterator = cellInfos.iterator();
         System.out.println();
+        System.out.println(" |123456789|");
         for (int i = 0; i < rows; i++) {
+            System.out.print(i + "|");
             for (int j = 0; j < cols; j++) {
                 if (iterator.hasNext()) {
                     System.out.print(iterator.next().display());
                 }
             }
+            System.out.print("|");
             System.out.println();
         }
+        System.out.println("-|---------|");
     }
 }
