@@ -6,9 +6,26 @@ public final class Coordinate {
     private final int row;
     private final int column;
 
+    @Deprecated
     public Coordinate(int row, int column) {
         this.row = row;
         this.column = column;
+    }
+
+    public Coordinate(int row, int column, GridSize gridSize) {
+        if (!isValid(gridSize, row, column)) {
+            throw new InvalidCoordinateException(
+                    String.format("Invalid coordinates provided: %d %d. For grid totalRows: %d, totalColumns: %d",
+                    row, column, gridSize.totalRows(), gridSize.totalColumns()));
+        }
+
+        this.row = row;
+        this.column = column;
+    }
+
+    private boolean isValid(GridSize gridSize, int row, int column) {
+        return (row > 0 &&  row <= gridSize.totalRows()) &&
+                (column > 0 && column <= gridSize.totalColumns());
     }
 
     @Override

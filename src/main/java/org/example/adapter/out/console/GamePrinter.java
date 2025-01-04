@@ -2,7 +2,6 @@ package org.example.adapter.out.console;
 
 import org.example.hexagon.application.port.Printer;
 
-import java.security.spec.RSAOtherPrimeInfo;
 import java.util.Iterator;
 import java.util.List;
 
@@ -27,6 +26,7 @@ public class GamePrinter implements Printer {
         Iterator<CellInfo> iterator = cellInfos.iterator();
         System.out.println();
         System.out.println(" |123456789|");
+        System.out.println("-|---------|");
         for (int i = 0; i < rows; i++) {
             System.out.print((i + 1) + "|");
             for (int j = 0; j < cols; j++) {

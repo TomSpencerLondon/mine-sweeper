@@ -1,7 +1,6 @@
 package org.example;
 
 import org.example.adapter.out.console.GamePrinter;
-import org.example.adapter.out.console.CoordinateValidator;
 import org.example.adapter.out.console.MineSweeperController;
 import org.example.adapter.out.console.RandomMineGenerator;
 import org.example.hexagon.application.MineSweeperService;
@@ -9,6 +8,7 @@ import org.example.hexagon.application.port.MineGenerator;
 import org.example.hexagon.application.port.Printer;
 import org.example.hexagon.domain.Coordinate;
 import org.example.hexagon.domain.Grid;
+import org.example.hexagon.domain.GridSize;
 
 import java.util.Random;
 import java.util.Scanner;
@@ -23,8 +23,8 @@ public class Main {
         int numMines = scanner.nextInt();
 
         MineGenerator randomMineGenerator = new RandomMineGenerator(rows, cols, new Random());
-        CoordinateValidator validator = new CoordinateValidator(rows, cols);
-        Grid grid = new Grid(numMines, randomMineGenerator, validator);
+        GridSize gridSize = new GridSize(rows, cols);
+        Grid grid = new Grid(numMines, randomMineGenerator, gridSize);
         MineSweeperService mineSweeperService = new MineSweeperService(grid);
         Printer printer = new GamePrinter(rows, cols);
         MineSweeperController mineSweeperController = new MineSweeperController(mineSweeperService, printer);
@@ -36,7 +36,7 @@ public class Main {
             int x = scanner.nextInt();
             int y = scanner.nextInt();
 
-            mineSweeperController.mark(new Coordinate(x, y));
+            mineSweeperController.mark(new Coordinate(x, y, gridSize));
 
         }
     }

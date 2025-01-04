@@ -1,19 +1,14 @@
 package org.example.hexagon.domain;
 
 import org.example.adapter.out.console.CellInfo;
-import org.example.adapter.out.console.CoordinateValidator;
 import org.example.hexagon.application.port.MineGenerator;
-import org.example.hexagon.application.port.Printer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 import java.util.Iterator;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -27,7 +22,7 @@ class GridTest {
     void setUp() {
         when(mineGenerator.next())
                 .thenReturn(new Coordinate(2, 5), new Coordinate(5, 1));
-        grid = new Grid(2, mineGenerator, new CoordinateValidator(9, 9));
+        grid = new Grid(2, mineGenerator, new GridSize(9, 9));
     }
 
     @Test
@@ -59,7 +54,7 @@ class GridTest {
                         new Coordinate(6, 1),
                         new Coordinate(6, 2)
                 );
-        grid = new Grid(4, mineGenerator, new CoordinateValidator(9, 9));
+        grid = new Grid(4, mineGenerator, new GridSize(9, 9));
 
 
         List<CellInfo> cellInfos = grid.cells()
@@ -91,7 +86,7 @@ class GridTest {
                         new Coordinate(6, 6),
                         new Coordinate(6, 7)
                 );
-        grid = new Grid(7, mineGenerator, new CoordinateValidator(9, 9));
+        grid = new Grid(7, mineGenerator, new GridSize(9, 9));
 
 
         List<CellInfo> cellInfos = grid.cells()
@@ -117,7 +112,7 @@ class GridTest {
                 .thenReturn(
                         new Coordinate(1, 2)
                 );
-        grid = new Grid(1, mineGenerator, new CoordinateValidator(9, 9));
+        grid = new Grid(1, mineGenerator, new GridSize(9, 9));
 
         grid.mark(new Coordinate(4, 8));
         grid.mark(new Coordinate(1, 2));

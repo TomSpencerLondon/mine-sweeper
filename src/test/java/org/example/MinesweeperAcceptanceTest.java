@@ -1,13 +1,13 @@
 package org.example;
 
 import org.example.adapter.out.console.GamePrinter;
-import org.example.adapter.out.console.CoordinateValidator;
 import org.example.adapter.out.console.MineSweeperController;
 import org.example.adapter.out.console.RandomMineGenerator;
 import org.example.hexagon.application.MineSweeperService;
 import org.example.hexagon.application.port.MineGenerator;
 import org.example.hexagon.domain.Coordinate;
 import org.example.hexagon.domain.Grid;
+import org.example.hexagon.domain.GridSize;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -69,6 +69,7 @@ public class MinesweeperAcceptanceTest {
                 """
                         How many mines do you want on the field? >\s
                          |123456789|
+                        -|---------|  
                         1|111......|
                         2|1.1......|
                         3|111......|
@@ -108,6 +109,7 @@ public class MinesweeperAcceptanceTest {
                 """
                         How many mines do you want on the field? >\s
                          |123456789|
+                        -|---------|   
                         1|....1.1..|
                         2|...1221..|
                         3|...1.1...|
@@ -132,7 +134,7 @@ public class MinesweeperAcceptanceTest {
             System.out.print("How many mines do you want on the field? > ");
             int numMines = scanner.nextInt();
 
-            Grid grid = new Grid(numMines, mineGenerator, new CoordinateValidator(rows, cols));
+            Grid grid = new Grid(numMines, mineGenerator, new GridSize(rows, cols));
 
             MineSweeperService mineSweeperService = new MineSweeperService(grid);
             GamePrinter printer = new GamePrinter(rows, cols);
