@@ -22,7 +22,7 @@ public class CellPrinter implements Printer {
         System.out.println();
         System.out.println(" |123456789|");
         for (int i = 0; i < rows; i++) {
-            System.out.print(i + "|");
+            System.out.print((i + 1) + "|");
             for (int j = 0; j < cols; j++) {
                 if (iterator.hasNext()) {
                     System.out.print(iterator.next().display());
