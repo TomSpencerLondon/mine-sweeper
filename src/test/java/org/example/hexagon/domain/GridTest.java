@@ -48,4 +48,65 @@ class GridTest {
         }
 
     }
+
+    @Test
+    void givenFourMinesShowsCorrectNeighbourCount() {
+        when(mineGenerator.next())
+                .thenReturn(
+                        new Coordinate(2, 1),
+                        new Coordinate(5, 4),
+                        new Coordinate(6, 1),
+                        new Coordinate(6, 2)
+                );
+        grid = new Grid(4, mineGenerator, new CoordinateValidator(9, 9));
+
+
+        List<CellInfo> cellInfos = grid.cells()
+                .stream()
+                .map(CellInfo::from)
+                .toList();
+
+        Iterator<CellInfo> iterator = cellInfos.iterator();
+        System.out.println();
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (iterator.hasNext()) {
+                    System.out.print(iterator.next().display());
+                }
+            }
+            System.out.println();
+        }
+    }
+
+    @Test
+    void givenSevenMinesShouldReturnCorrectNeighbourCount() {
+        when(mineGenerator.next())
+                .thenReturn(
+                        new Coordinate(2, 2),
+                        new Coordinate(2, 4),
+                        new Coordinate(2, 7),
+                        new Coordinate(3, 1),
+                        new Coordinate(3, 7),
+                        new Coordinate(6, 6),
+                        new Coordinate(6, 7)
+                );
+        grid = new Grid(7, mineGenerator, new CoordinateValidator(9, 9));
+
+
+        List<CellInfo> cellInfos = grid.cells()
+                .stream()
+                .map(CellInfo::from)
+                .toList();
+
+        Iterator<CellInfo> iterator = cellInfos.iterator();
+        System.out.println();
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (iterator.hasNext()) {
+                    System.out.print(iterator.next().display());
+                }
+            }
+            System.out.println();
+        }
+    }
 }

@@ -7,10 +7,6 @@ public final class Coordinate {
     private final int column;
 
     public Coordinate(int row, int column) {
-//        if (row == 0 || column == 0) {
-//            throw new IllegalArgumentException("Can't have zero row or column. Count is 1 - 9");
-//        }
-
         this.row = row;
         this.column = column;
     }

@@ -18,9 +18,8 @@ public class Grid {
         this.mineGenerator = mineGenerator;
         this.validator = validator;
         this.mines = createMines();
-        this.neighbours = new HashMap<>();
-        this.cells = new ArrayList<>();
-        create();
+        this.neighbours = createNeighbours();
+        this.cells = createCells();
     }
 
     public List<Cell> cells() {
@@ -39,7 +38,34 @@ public class Grid {
         return mines;
     }
 
-    private void create() {
+    private List<Cell> createCells() {
+        List<Cell> result = new ArrayList<>();
+        for (Map.Entry<Coordinate, Integer> entry : neighbours.entrySet()) {
+            result.add(new Cell(entry.getKey(), State.NUMBER, entry.getValue(), Visibility.HIDDEN));
+        }
+
+        for (Coordinate mine : mines) {
+            result.add(new Cell(mine, State.MINE, Visibility.HIDDEN));
+        }
+
+        for (int row = 1; row <= rowSize(); row++) {
+            for (int col = 1; col <= columnSize(); col++) {
+                Cell cell = new Cell(new Coordinate(row, col), State.EMPTY, 0, Visibility.HIDDEN);
+
+                if (validator.isValid(cell.coordinate()) && !result.contains(cell)) {
+                    result.add(cell);
+                }
+            }
+        }
+
+        return result.stream()
+                .sorted(Comparator.comparingInt(Cell::row).thenComparingInt(Cell::col))
+                .toList();
+    }
+
+    private Map<Coordinate, Integer> createNeighbours() {
+        Map<Coordinate, Integer> result = new HashMap<>();
+
         for (Coordinate mine : mines) {
             for (int i = -1; i <= 1; i++) {
                 for (int j = -1; j <= 1; j++) {
@@ -47,44 +73,23 @@ public class Grid {
                     int newCol = mine.column() + j;
                     Coordinate coordinate = new Coordinate(newRow, newCol);
                     if (validator.isValid(coordinate) && !mines.contains(coordinate)) {
-                        neighbours.put(coordinate, neighbours.getOrDefault(coordinate, 0) + 1);
+                        result.put(coordinate, result.getOrDefault(coordinate, 0) + 1);
                     }
                 }
             }
         }
 
-        for (Coordinate mine : mines) {
-            cells.add(new Cell(mine, State.MINE, Visibility.HIDDEN));
-        }
-
-        for (Map.Entry<Coordinate, Integer> entry : neighbours.entrySet()) {
-            cells.add(new Cell(entry.getKey(), State.NUMBER, entry.getValue(), Visibility.HIDDEN));
-        }
-
-
-        for (int row = 1; row <= rowSize(); row++) {
-            for (int col = 1; col <= columnSize(); col++) {
-                Cell cell = new Cell(new Coordinate(row, col), State.EMPTY, 0, Visibility.HIDDEN);
-
-                if (validator.isValid(cell.coordinate()) && !cells.contains(cell)) {
-                    cells.add(cell);
-                }
-            }
-        }
-
-        cells.sort(Comparator.comparingInt(Cell::row).thenComparingInt(Cell::col));
+        return result;
     }
 
     private List<Coordinate> createMines() {
-        List<Coordinate> result = new ArrayList<>();
-        for (int i = 0; i < totalMines; i++) {
+        Set<Coordinate> result = new HashSet<>();
+        while (result.size() < totalMines) {
             Coordinate mine = mineGenerator.next();
-
             if (validator.isValid(mine)) {
                 result.add(mine);
             }
         }
-
-        return result;
+        return new ArrayList<>(result);
     }
 }

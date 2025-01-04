@@ -21,12 +21,13 @@ import java.util.Scanner;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class MinesweeperAcceptanceTest {
 
     @Mock
-    private static MineGenerator mineGenerator;
+    private static MineGenerator mineGenerator = mock(RandomMineGenerator.class);
 
 
 
@@ -34,12 +35,6 @@ public class MinesweeperAcceptanceTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
-        when(mineGenerator.next())
-                .thenReturn(
-                        new Coordinate(2, 2),
-                        new Coordinate(5, 5),
-                        new Coordinate(7, 7));
         outputStream = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outputStream));
     }
@@ -55,7 +50,13 @@ public class MinesweeperAcceptanceTest {
 
 
     @Test
-    void name() {
+    void givenThreeMinesReturnsCorrectOutput() {
+        when(mineGenerator.next())
+                .thenReturn(
+                        new Coordinate(2, 2),
+                        new Coordinate(5, 5),
+                        new Coordinate(7, 7));
+
         simulateInput("""
                 3
                 """);
@@ -70,15 +71,52 @@ public class MinesweeperAcceptanceTest {
         ).isEqualTo(
                 """
                         How many mines do you want on the field? >\s
+                        111......
+                        1X1......
+                        111......
+                        ...111...
+                        ...1X1...
+                        ...11211.
+                        .....1X1.
+                        .....111.
                         .........
-                        .111.....
-                        .1X1.....
-                        .111.....
-                        ....111..
-                        ....1X1..
-                        ....11211
-                        ......1X1
-                        ......111
+                        """
+        );
+    }
+
+
+    @Test
+    void givenFourMinesReturnsCorrectOutput() {
+        when(mineGenerator.next())
+                .thenReturn(
+                        new Coordinate(1, 6),
+                        new Coordinate(3, 5),
+                        new Coordinate(5, 7),
+                        new Coordinate(5, 8));
+
+        simulateInput("""
+                4
+                """);
+
+        TestableMain.main(new String[0]);
+
+        String output = getCapturedOutput();
+
+
+        assertThat(
+                output
+        ).isEqualTo(
+                """
+                        How many mines do you want on the field? >\s
+                        111......
+                        1X1......
+                        111......
+                        ...111...
+                        ...1X1...
+                        ...11211.
+                        .....1X1.
+                        .....111.
+                        .........
                         """
         );
     }
