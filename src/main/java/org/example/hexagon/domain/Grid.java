@@ -24,8 +24,6 @@ public class Grid {
 //    add only those that are empty and unexplored to the queue
 //    Neighbour - reveal cell itself and do nothing else
 
-//    Extra: User can win with all mines marked / only mines not revealed
-
     Map<Coordinate, Integer> neighbours;
     int totalMines;
 
