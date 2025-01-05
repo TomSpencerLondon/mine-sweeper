@@ -118,23 +118,34 @@ public class Grid {
     }
 
     public boolean hasWon() {
-        for (Cell cell : cells) {
-            if (cell.isEmpty() && cell.isMarked()) {
-                return false;
-            }
-            if (cell.isMine() && !cell.isMarked()) {
-                return false;
-            }
-        }
+        return allMinesAreMarked() ||
+                allNonMinesAreRevealed();
+    }
 
+    private boolean allMinesAreMarked() {
+        return cells.stream()
+                .filter(Cell::isMine)
+                .allMatch(Cell::isMarked);
+    }
 
-
-        return true;
+    private boolean allNonMinesAreRevealed() {
+        return cells.stream()
+                .filter(cell -> !cell.isMine())
+                .allMatch(Cell::isRevealed);
     }
 
     public void mark(Coordinate coordinate) {
-        cells.stream().filter(cell -> cell.coordinate().equals(coordinate))
-                .findFirst()
+        cellFor(coordinate)
                 .ifPresent(Cell::mark);
+    }
+
+    public void reveal(Coordinate coordinate) {
+        cellFor(coordinate)
+                .ifPresent(Cell::reveal);
+    }
+
+    private Optional<Cell> cellFor(Coordinate coordinate) {
+        return cells.stream().filter(cell -> cell.coordinate().equals(coordinate))
+                .findFirst();
     }
 }

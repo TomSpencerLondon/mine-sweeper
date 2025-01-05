@@ -110,7 +110,7 @@ class GridTest {
     }
 
     @Test
-    void givenOneMineIncorrectThenCorrectMarkingReturnsWinner() {
+    void givenOneMineIncorrectThenCorrectMarkingReturnsWin() {
         when(mineGenerator.next())
                 .thenReturn(
                         createCoordinate(1, 2)
@@ -124,6 +124,29 @@ class GridTest {
         assertThat(grid.hasWon())
                 .isTrue();
     }
+
+    @Test
+    void givenOneMineAndAllOtherCellsRevealedReturnsWin() {
+        when(mineGenerator.next())
+                .thenReturn(
+                        createCoordinate(1, 2)
+                );
+        grid = new Grid(1, mineGenerator, new GridSize(3, 3));
+
+        grid.reveal(createCoordinate(1, 1));
+        grid.reveal(createCoordinate(1, 3));
+        grid.reveal(createCoordinate(2, 1));
+        grid.reveal(createCoordinate(2, 2));
+        grid.reveal(createCoordinate(2, 3));
+        grid.reveal(createCoordinate(3, 1));
+        grid.reveal(createCoordinate(3, 2));
+        grid.reveal(createCoordinate(3, 3));
+
+        assertThat(grid.hasWon())
+                .isTrue();
+    }
+
+//    Revealing a mine should trigger game over
 
     private Coordinate createCoordinate(int row, int column) {
         return new Coordinate(row, column, gridSize);
