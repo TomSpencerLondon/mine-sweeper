@@ -1,6 +1,7 @@
 package org.example.hexagon.domain;
 
 import org.example.adapter.out.console.CellInfo;
+import org.example.adapter.out.console.CellInfoTest;
 import org.example.hexagon.application.port.MineGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,7 +24,7 @@ class GridTest {
     void setUp() {
         gridSize = new GridSize(9, 9);
         when(mineGenerator.next())
-                .thenReturn(new Coordinate(2, 5, gridSize), new Coordinate(5, 1, gridSize));
+                .thenReturn(createCoordinate(2, 5), createCoordinate(5, 1));
         grid = new Grid(2, mineGenerator, gridSize);
     }
 
@@ -51,10 +52,10 @@ class GridTest {
     void givenFourMinesShowsCorrectNeighbourCount() {
         when(mineGenerator.next())
                 .thenReturn(
-                        new Coordinate(2, 1, gridSize),
-                        new Coordinate(5, 4, gridSize),
-                        new Coordinate(6, 1, gridSize),
-                        new Coordinate(6, 2, gridSize)
+                        createCoordinate(2, 1),
+                        createCoordinate(5, 4),
+                        createCoordinate(6, 1),
+                        createCoordinate(6, 2)
                 );
         grid = new Grid(4, mineGenerator, new GridSize(9, 9));
 
@@ -80,13 +81,13 @@ class GridTest {
     void givenSevenMinesShouldReturnCorrectNeighbourCount() {
         when(mineGenerator.next())
                 .thenReturn(
-                        new Coordinate(2, 2, gridSize),
-                        new Coordinate(2, 4, gridSize),
-                        new Coordinate(2, 7, gridSize),
-                        new Coordinate(3, 1, gridSize),
-                        new Coordinate(3, 7, gridSize),
-                        new Coordinate(6, 6, gridSize),
-                        new Coordinate(6, 7, gridSize)
+                        createCoordinate(2, 2),
+                        createCoordinate(2, 4),
+                        createCoordinate(2, 7),
+                        createCoordinate(3, 1),
+                        createCoordinate(3, 7),
+                        createCoordinate(6, 6),
+                        createCoordinate(6, 7)
                 );
         grid = new Grid(7, mineGenerator, new GridSize(9, 9));
 
@@ -112,15 +113,19 @@ class GridTest {
     void givenOneMineIncorrectThenCorrectMarkingReturnsWinner() {
         when(mineGenerator.next())
                 .thenReturn(
-                        new Coordinate(1, 2, gridSize)
+                        createCoordinate(1, 2)
                 );
         grid = new Grid(1, mineGenerator, new GridSize(9, 9));
 
-        grid.mark(new Coordinate(4, 8, gridSize));
-        grid.mark(new Coordinate(1, 2, gridSize));
-        grid.mark(new Coordinate(4, 8, gridSize));
+        grid.mark(createCoordinate(4, 8));
+        grid.mark(createCoordinate(1, 2));
+        grid.mark(createCoordinate(4, 8));
 
         assertThat(grid.hasWon())
                 .isTrue();
+    }
+
+    private Coordinate createCoordinate(int row, int column) {
+        return new Coordinate(row, column, gridSize);
     }
 }

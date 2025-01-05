@@ -13,6 +13,19 @@ public class Grid {
     private List<Cell> cells;
     List<Coordinate> mines;
 
+//    Breadth First Search
+//    1. List of Visited Cells
+//    2. Queue to manage cells to be explored
+//    start by adding the initial cell to the queue
+//    3. While queue is not empty
+//    remove first cell from queue
+//    check cell state: Empty / Neighbour (count)
+//    Empty - reveal + add neighbours to the queue (the 8 surrounding squares)
+//    add only those that are empty and unexplored to the queue
+//    Neighbour - reveal cell itself and do nothing else
+
+//    Extra: User can win with all mines marked / only mines not revealed
+
     Map<Coordinate, Integer> neighbours;
     int totalMines;
 
@@ -35,11 +48,11 @@ public class Grid {
     private List<Cell> createCells() {
         List<Cell> result = new ArrayList<>();
         for (Map.Entry<Coordinate, Integer> entry : neighbours.entrySet()) {
-            result.add(new Cell(entry.getKey(), CellType.NEIGHBOUR, entry.getValue(), Visibility.HIDDEN));
+            result.add(Cell.createNeighbour(entry.getKey(), entry.getValue()));
         }
 
         for (Coordinate mine : mines) {
-            result.add(new Cell(mine, CellType.MINE, Visibility.HIDDEN));
+            result.add(new Cell(mine, CellType.MINE));
         }
 
         for (int row = 1; row <= gridSize.totalRows(); row++) {
@@ -47,7 +60,7 @@ public class Grid {
 
                 try {
                     Coordinate coordinate = new Coordinate(row, col, gridSize);
-                    Cell cell = new Cell(coordinate, CellType.EMPTY, 0, Visibility.HIDDEN);
+                    Cell cell = Cell.createNeighbour(coordinate, 0);
                     if (!result.contains(cell)) {
                         result.add(cell);
                     }

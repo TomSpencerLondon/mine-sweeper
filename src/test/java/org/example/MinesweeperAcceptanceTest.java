@@ -26,12 +26,13 @@ public class MinesweeperAcceptanceTest {
     @Mock
     private static MineGenerator mineGenerator = mock(RandomMineGenerator.class);
 
-
+    private GridSize gridSize;
 
     private ByteArrayOutputStream outputStream;
 
     @BeforeEach
     void setUp() {
+        gridSize = new GridSize(9, 9);
         outputStream = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outputStream));
     }
@@ -48,16 +49,18 @@ public class MinesweeperAcceptanceTest {
 
     @Test
     void givenThreeMinesReturnsCorrectOutput() {
-        GridSize gridSize = new GridSize(9, 9);
         when(mineGenerator.next())
                 .thenReturn(
-                        new Coordinate(2, 2, gridSize),
-                        new Coordinate(5, 5, gridSize),
-                        new Coordinate(7, 7, gridSize));
+                        createCoordinate(2, 2),
+                        createCoordinate(4, 4),
+                        createCoordinate(7, 7));
 
         simulateInput("""
                 3
                 """);
+//        simulateInput("""
+//                5 5 mine
+//                """);
 
         TestableMain.main(new String[0]);
 
@@ -70,15 +73,15 @@ public class MinesweeperAcceptanceTest {
                 """
                         How many mines do you want on the field? >\s
                          |123456789|
-                        -|---------|  
-                        1|111......|
-                        2|1.1......|
-                        3|111......|
-                        4|...111...|
-                        5|...1.1...|
-                        6|...11211.|
-                        7|.....1.1.|
-                        8|.....111.|
+                        -|---------|
+                        1|.........|
+                        2|.........|
+                        3|.........|
+                        4|.........|
+                        5|.........|
+                        6|.........|
+                        7|.........|
+                        8|.........|
                         9|.........|
                         -|---------|
                         """
@@ -88,13 +91,12 @@ public class MinesweeperAcceptanceTest {
 
     @Test
     void givenFourMinesReturnsCorrectOutput() {
-        GridSize gridSize = new GridSize(9, 9);
         when(mineGenerator.next())
                 .thenReturn(
-                        new Coordinate(1, 6, gridSize),
-                        new Coordinate(3, 5, gridSize),
-                        new Coordinate(5, 7, gridSize),
-                        new Coordinate(5, 8, gridSize));
+                        createCoordinate(1, 6),
+                        createCoordinate(3, 5),
+                        createCoordinate(5, 7),
+                        createCoordinate(5, 8));
 
         simulateInput("""
                 4
@@ -111,19 +113,23 @@ public class MinesweeperAcceptanceTest {
                 """
                         How many mines do you want on the field? >\s
                          |123456789|
-                        -|---------|   
-                        1|....1.1..|
-                        2|...1221..|
-                        3|...1.1...|
-                        4|...112221|
-                        5|.....1..1|
-                        6|.....1221|
+                        -|---------|
+                        1|.........|
+                        2|.........|
+                        3|.........|
+                        4|.........|
+                        5|.........|
+                        6|.........|
                         7|.........|
                         8|.........|
                         9|.........|
                         -|---------|
                         """
         );
+    }
+
+    private Coordinate createCoordinate(int row, int column) {
+        return new Coordinate(row, column, gridSize);
     }
 
 
