@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 public class Grid {
     Logger logger = LoggerFactory.getLogger(Grid.class);
@@ -138,8 +139,20 @@ public class Grid {
     }
 
     public void reveal(Coordinate coordinate) {
-        cellFor(coordinate)
-                .ifPresent(Cell::reveal);
+        cellFor(coordinate).ifPresent(revealMine(coordinate));
+    }
+
+    private static Consumer<Cell> revealMine(Coordinate coordinate) {
+        return cell -> {
+            if (cell.isMine()) {
+                throw new MineRevealedException(
+                        String.format("Game Over. Mine revealed: %d %d",
+                                coordinate.column(),
+                                coordinate.row())
+                );
+            }
+            cell.reveal();
+        };
     }
 
     private Optional<Cell> cellFor(Coordinate coordinate) {

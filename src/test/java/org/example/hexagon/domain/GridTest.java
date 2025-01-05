@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -146,7 +147,21 @@ class GridTest {
                 .isTrue();
     }
 
-//    Revealing a mine should trigger game over
+    @Test
+    void revealMineShouldThrowException() {
+        Coordinate coordinate = createCoordinate(1, 2);
+        when(mineGenerator.next())
+                .thenReturn(
+                        coordinate
+                );
+
+        grid = new Grid(1, mineGenerator, new GridSize(3, 3));
+
+        assertThatThrownBy(() -> grid.reveal(coordinate))
+                .isInstanceOf(MineRevealedException.class)
+                .hasMessage("Game Over. Mine revealed: %d %d",
+                        coordinate.column(), coordinate.row());
+    }
 
     private Coordinate createCoordinate(int row, int column) {
         return new Coordinate(row, column, gridSize);
