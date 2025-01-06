@@ -3,6 +3,8 @@ package org.example;
 import org.example.adapter.out.console.GamePrinter;
 import org.example.adapter.out.console.MineSweeperController;
 import org.example.adapter.out.console.RandomMineGenerator;
+import org.example.adapter.out.console.command.Command;
+import org.example.adapter.out.console.command.CommandFactory;
 import org.example.hexagon.application.MineSweeperService;
 import org.example.hexagon.application.port.MineGenerator;
 import org.example.hexagon.application.port.Printer;
@@ -32,12 +34,13 @@ public class Main {
         mineSweeperController.displayCells();
 
         while (!mineSweeperController.hasWon()) {
-            printer.print("Set/delete mines marks (x and y coordinates): >\n");
+            printer.print("Set/unset mines marks or claim a cell as free: >\n");
             int x = scanner.nextInt();
             int y = scanner.nextInt();
-
-            mineSweeperController.mark(new Coordinate(x, y, gridSize));
-
+            String action = scanner.next();
+            CommandFactory commandFactory = new CommandFactory(mineSweeperController);
+            Command command = commandFactory.create(action);
+            command.execute(new Coordinate(x, y, gridSize));
         }
     }
 }
