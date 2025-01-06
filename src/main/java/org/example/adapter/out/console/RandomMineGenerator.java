@@ -18,6 +18,8 @@ public class RandomMineGenerator implements MineGenerator {
     public Coordinate next() {
         int column = random.nextInt(1, gridSize.totalColumns());
         int row = random.nextInt(1, gridSize.totalRows());
-        return new Coordinate(column, row, gridSize);
+        Coordinate coordinate = new Coordinate(column, row, gridSize);
+        System.out.println("Next: " + coordinate.toString());
+        return coordinate;
     }
 }

@@ -14,6 +14,10 @@ public class CellInfo {
             return createMineCellInfoFrom(cell);
         } else if (cell.isNeighbour()) {
 
+            if (cell.isMarked()) {
+                return new CellInfo("*");
+            }
+
             return new CellInfo(
                     cell.isRevealed() ?
                             Integer.toString(cell.neighbourCount()) :
@@ -24,7 +28,7 @@ public class CellInfo {
             return new CellInfo("/");
         }
 
-        return new CellInfo(cell.isMarked() ? "*" : ".");
+        return new CellInfo(cell.isRevealed() || cell.isMarked() ? "*" : ".");
     }
 
     private static CellInfo createMineCellInfoFrom(Cell cell) {

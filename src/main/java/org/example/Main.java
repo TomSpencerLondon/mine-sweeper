@@ -30,6 +30,7 @@ public class Main {
         MineSweeperService mineSweeperService = new MineSweeperService(grid);
         Printer printer = new GamePrinter(rows, cols);
         MineSweeperController mineSweeperController = new MineSweeperController(mineSweeperService, printer);
+        CommandFactory commandFactory = new CommandFactory(mineSweeperController);
 
         mineSweeperController.displayCells();
 
@@ -38,7 +39,6 @@ public class Main {
             int x = scanner.nextInt();
             int y = scanner.nextInt();
             String action = scanner.next();
-            CommandFactory commandFactory = new CommandFactory(mineSweeperController);
             Command command = commandFactory.create(action);
             command.execute(new Coordinate(x, y, gridSize));
         }

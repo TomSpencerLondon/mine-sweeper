@@ -1,18 +1,13 @@
 package org.example.hexagon.domain;
 
 import org.example.hexagon.application.port.MineGenerator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.function.Consumer;
-import java.util.stream.Stream;
 
 public class Grid {
-    Logger logger = LoggerFactory.getLogger(Grid.class);
     private final MineGenerator mineGenerator;
     private final GridSize gridSize;
-    private final List<Cell> cells;
+    private List<Cell> cells;
     List<Coordinate> mines;
 
     Map<Coordinate, Integer> neighbours;
@@ -39,6 +34,7 @@ public class Grid {
 
     private List<Cell> createCells() {
         List<Cell> result = new ArrayList<>();
+
         for (Map.Entry<Coordinate, Integer> entry : neighbours.entrySet()) {
             result.add(Cell.createNeighbour(entry.getKey(), entry.getValue()));
         }
@@ -58,7 +54,6 @@ public class Grid {
                     }
 
                 } catch (InvalidCoordinateException e) {
-                    logger.info(e.getMessage());
                 }
 
             }
@@ -83,7 +78,6 @@ public class Grid {
                         }
 
                     } catch (InvalidCoordinateException e) {
-                        logger.info(e.getMessage());
                     }
 
                 }
@@ -101,7 +95,6 @@ public class Grid {
                 Coordinate mine = mineGenerator.next();
                 result.add(mine);
             } catch (InvalidCoordinateException e) {
-                logger.info(e.getMessage());
             }
         }
         return new ArrayList<>(result);
@@ -131,28 +124,57 @@ public class Grid {
 
     public void reveal(Coordinate coordinate) {
         cellFor(coordinate)
-                .ifPresent(revealCellFor(coordinate));
+                .ifPresent(this::revealCellFor);
     }
 
-    private Consumer<Cell> revealCellFor(Coordinate coordinate) {
-        return cell -> {
-            if (cell.isMine()) {
-                throw new MineRevealedException(
-                        String.format("Game Over. Mine revealed: %d %d",
-                                coordinate.row(),
-                                coordinate.column())
-                );
+    public void firstReveal(Coordinate coordinate) {
+        mines = createMines(coordinate);
+        neighbours = createNeighbours();
+        cells = createCells();
+        reveal(coordinate);
+    }
+
+    private List<Coordinate> createMines(Coordinate coordinate) {
+        Set<Coordinate> result = new HashSet<>();
+        while (result.size() < totalMines) {
+
+            try {
+                Coordinate mine = mineGenerator.next();
+                if (coordinate.equals(mine)) {
+                    throw new InvalidCoordinateException("");
+                }
+
+                result.add(mine);
+            } catch (InvalidCoordinateException e) {
             }
-            revealAllFrom(cell);
-        };
+        }
+        return new ArrayList<>(result);
     }
 
-    private void revealAllFrom(Cell cell) {
-        if (cell.isNeighbour()) {
+    public void revealMines() {
+        for (Cell cell : cells) {
+            if (cell.isMine()) {
+                cell.reveal();
+            }
+        }
+    }
+
+    private void revealCellFor(Cell cell) {
+        if (cell.isMine()) {
+            revealMines();
+            throw new MineRevealedException(
+                    String.format("Game Over. Mine revealed: %d %d",
+                            cell.row(),
+                            cell.col()));
+        } else if (cell.isNeighbour()) {
             cell.reveal();
             return;
         }
 
+        revealAllFrom(cell);
+    }
+
+    private void revealAllFrom(Cell cell) {
         Queue<Cell> queue = new LinkedList<>();
 
         Set<Cell> visited = new HashSet<>();
@@ -162,7 +184,10 @@ public class Grid {
 
         while (!queue.isEmpty()) {
             Cell current = queue.poll();
-            if (!current.isMine()) {
+            if (!current.isMine() ||
+                    cells.stream().filter(c -> !c.isMine())
+                            .allMatch(Cell::isRevealed)
+            ) {
                 current.reveal();
             }
 
@@ -182,6 +207,7 @@ public class Grid {
         if (current.isNeighbour()) {
             return Collections.emptyList();
         }
+
         List<Cell> result = new ArrayList<>();
 
         for (int i = -1; i <= 1; i++) {
@@ -193,11 +219,10 @@ public class Grid {
                     Coordinate coordinate = new Coordinate(newColumn, newRow, gridSize);
 
                     cells.stream().filter(c -> c.coordinate().equals(coordinate))
-                                    .findFirst()
-                                    .ifPresent(result::add);
+                            .findFirst()
+                            .ifPresent(result::add);
 
                 } catch (InvalidCoordinateException e) {
-                    logger.info(e.getMessage());
                 }
 
             }

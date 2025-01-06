@@ -66,6 +66,10 @@ public class Cell {
         return coordinate.column();
     }
 
+    public void unMark() {
+        visibility = Visibility.HIDDEN;
+    }
+
     public void mark() {
         if (visibility == Visibility.REVEALED)  {
             return;

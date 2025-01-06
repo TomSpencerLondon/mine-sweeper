@@ -8,6 +8,7 @@ import org.example.hexagon.domain.MineRevealedException;
 
 import java.util.List;
 
+
 public class MineSweeperController {
 
     private final MineSweeperService service;
@@ -32,32 +33,42 @@ public class MineSweeperController {
         return service.hasWon();
     }
 
+    public void firstReveal(Coordinate coordinate) {
+        service.firstReveal(coordinate);
+        if (service.hasWon()) {
+            displayCells();
+            printer.print("Congratulations! You found all the mines!");
+        } else {
+            displayCells();
+        }
+    }
+
     public void reveal(Coordinate coordinate) {
         try {
             service.reveal(coordinate);
 
             if (service.hasWon()) {
+                displayCells();
                 printer.print("Congratulations! You found all the mines!");
             } else {
                 displayCells();
             }
         } catch (MineRevealedException e) {
+            displayCells();
             printer.print("You stepped on a mine and failed!");
         }
     }
 
     public void mark(Coordinate coordinate) {
-        try {
-            service.mark(coordinate);
+        service.mark(coordinate);
 
-            if (service.hasWon()) {
-                printer.print("Congratulations! You found all the mines!");
-            } else {
-                displayCells();
-            }
-
-        } catch(InvalidSelectionException e) {
-            printer.print("There is a number here!");
+        if (service.hasWon()) {
+            displayCells();
+            printer.print("Congratulations! You found all the mines!");
+        } else {
+            displayCells();
         }
+
     }
 }
+

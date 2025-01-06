@@ -196,6 +196,40 @@ class GridTest {
                 );
     }
 
+    @Test
+    void givenTwoMinesMarkOnMineShowsMine() {
+        Coordinate mine = createCoordinate(8, 2);
+        when(mineGenerator.next())
+                .thenReturn(
+                        mine
+                );
+
+        grid = new Grid(1, mineGenerator, new GridSize(9, 9));
+
+        grid.reveal(createCoordinate(3, 1));
+        grid.reveal(createCoordinate(9, 2));
+        grid.reveal(createCoordinate(8, 1));
+        grid.reveal(createCoordinate(9, 1));
+
+        assertThat(grid.hasWon())
+                .isTrue();
+    }
+
+    @Test
+    void givenMineShowsMine() {
+        Coordinate mine = createCoordinate(1, 6);
+        when(mineGenerator.next())
+                .thenReturn(
+                        mine
+                );
+        grid = new Grid(1, mineGenerator, new GridSize(9, 9));
+
+        grid.mark(createCoordinate(1, 6));
+
+        assertThat(grid.hasWon())
+                .isTrue();
+    }
+
     private Coordinate createCoordinate(int column, int row) {
         return new Coordinate(column, row, gridSize);
     }
