@@ -35,12 +35,7 @@ public class MineSweeperController {
 
     public void firstReveal(Coordinate coordinate) {
         service.firstReveal(coordinate);
-        if (service.hasWon()) {
-            displayCells();
-            printer.print("Congratulations! You found all the mines!");
-        } else {
-            displayCells();
-        }
+        displayCells();
     }
 
     public void reveal(Coordinate coordinate) {
