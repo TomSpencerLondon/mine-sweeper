@@ -23,12 +23,16 @@ public class MineSweeperService {
         return grid.hasWon();
     }
 
+    public void reveal(Coordinate coordinate) {
+        grid.reveal(coordinate);
+    }
+
     public void mark(Coordinate coordinate) {
         grid.cells().forEach(cell -> {
             if (cell.coordinate().equals(coordinate) && cell.isNeighbour()) {
                 throw new InvalidSelectionException(
                         String.format("Invalid selection at coordinate %d,%d. Cannot select a neighbour",
-                                coordinate.row(), coordinate.column())
+                                coordinate.column(), coordinate.row())
                 );
             }
         });

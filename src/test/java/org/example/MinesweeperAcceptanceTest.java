@@ -128,8 +128,8 @@ public class MinesweeperAcceptanceTest {
         );
     }
 
-    private Coordinate createCoordinate(int row, int column) {
-        return new Coordinate(row, column, gridSize);
+    private Coordinate createCoordinate(int column, int row) {
+        return new Coordinate(column, row, gridSize);
     }
 
 

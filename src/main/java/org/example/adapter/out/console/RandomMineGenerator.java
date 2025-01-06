@@ -16,8 +16,8 @@ public class RandomMineGenerator implements MineGenerator {
     }
 
     public Coordinate next() {
-        int row = random.nextInt(1, gridSize.totalRows());
         int column = random.nextInt(1, gridSize.totalColumns());
+        int row = random.nextInt(1, gridSize.totalRows());
         return new Coordinate(column, row, gridSize);
     }
 }

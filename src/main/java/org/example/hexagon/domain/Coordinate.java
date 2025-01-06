@@ -3,18 +3,18 @@ package org.example.hexagon.domain;
 import java.util.Objects;
 
 public final class Coordinate {
-    private final int row;
     private final int column;
+    private final int row;
 
-    public Coordinate(int row, int column, GridSize gridSize) {
-        if (!isValid(gridSize, row, column)) {
+    public Coordinate(int column, int row, GridSize gridSize) {
+        if (!isValid(gridSize, column, row)) {
             throw new InvalidCoordinateException(
                     String.format("Invalid coordinates provided: %d %d. For grid totalRows: %d, totalColumns: %d",
-                    row, column, gridSize.totalRows(), gridSize.totalColumns()));
+                            column, row, gridSize.totalRows(), gridSize.totalColumns()));
         }
 
-        this.row = row;
         this.column = column;
+        this.row = row;
     }
 
     private boolean isValid(GridSize gridSize, int row, int column) {
@@ -29,21 +29,21 @@ public final class Coordinate {
 
         Coordinate that = (Coordinate) o;
 
-        if (row != that.row) return false;
-        return column == that.column;
-    }
-
-    public int row() {
-        return row;
+        if (column != that.column) return false;
+        return row == that.row;
     }
 
     public int column() {
         return column;
     }
 
+    public int row() {
+        return row;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(row, column);
+        return Objects.hash(column, row);
     }
 
     @Override

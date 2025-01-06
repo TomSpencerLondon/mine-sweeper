@@ -6,24 +6,14 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 public class Grid {
     Logger logger = LoggerFactory.getLogger(Grid.class);
     private final MineGenerator mineGenerator;
     private final GridSize gridSize;
-    private List<Cell> cells;
+    private final List<Cell> cells;
     List<Coordinate> mines;
-
-//    Breadth First Search
-//    1. List of Visited Cells
-//    2. Queue to manage cells to be explored
-//    start by adding the initial cell to the queue
-//    3. While queue is not empty
-//    remove first cell from queue
-//    check cell state: Empty / Neighbour (count)
-//    Empty - reveal + add neighbours to the queue (the 8 surrounding squares)
-//    add only those that are empty and unexplored to the queue
-//    Neighbour - reveal cell itself and do nothing else
 
     Map<Coordinate, Integer> neighbours;
     int totalMines;
@@ -36,8 +26,11 @@ public class Grid {
         this.neighbours = createNeighbours();
         this.cells = createCells();
     }
+
     public List<Cell> cells() {
-        return cells;
+        return cells.stream()
+                .sorted(Comparator.comparingInt(Cell::row).thenComparingInt(Cell::col))
+                .toList();
     }
 
     public List<Coordinate> mines() {
@@ -54,12 +47,12 @@ public class Grid {
             result.add(new Cell(mine, CellType.MINE));
         }
 
-        for (int row = 1; row <= gridSize.totalRows(); row++) {
-            for (int col = 1; col <= gridSize.totalColumns(); col++) {
+        for (int column = 1; column <= gridSize.totalRows(); column++) {
+            for (int row = 1; row <= gridSize.totalColumns(); row++) {
 
                 try {
-                    Coordinate coordinate = new Coordinate(row, col, gridSize);
-                    Cell cell = Cell.createNeighbour(coordinate, 0);
+                    Coordinate coordinate = new Coordinate(column, row, gridSize);
+                    Cell cell = new Cell(coordinate, CellType.EMPTY);
                     if (!result.contains(cell)) {
                         result.add(cell);
                     }
@@ -71,9 +64,7 @@ public class Grid {
             }
         }
 
-        return result.stream()
-                .sorted(Comparator.comparingInt(Cell::row).thenComparingInt(Cell::col))
-                .toList();
+        return result;
     }
 
     private Map<Coordinate, Integer> createNeighbours() {
@@ -84,9 +75,9 @@ public class Grid {
                 for (int j = -1; j <= 1; j++) {
 
                     try {
-                        int newRow = mine.row() + i;
-                        int newCol = mine.column() + j;
-                        Coordinate coordinate = new Coordinate(newRow, newCol, gridSize);
+                        int newColumn = mine.column() + i;
+                        int newRow = mine.row() + j;
+                        Coordinate coordinate = new Coordinate(newColumn, newRow, gridSize);
                         if (!mines.contains(coordinate)) {
                             result.put(coordinate, result.getOrDefault(coordinate, 0) + 1);
                         }
@@ -139,20 +130,80 @@ public class Grid {
     }
 
     public void reveal(Coordinate coordinate) {
-        cellFor(coordinate).ifPresent(revealMine(coordinate));
+        cellFor(coordinate)
+                .ifPresent(revealCellFor(coordinate));
     }
 
-    private static Consumer<Cell> revealMine(Coordinate coordinate) {
+    private Consumer<Cell> revealCellFor(Coordinate coordinate) {
         return cell -> {
             if (cell.isMine()) {
                 throw new MineRevealedException(
                         String.format("Game Over. Mine revealed: %d %d",
-                                coordinate.column(),
-                                coordinate.row())
+                                coordinate.row(),
+                                coordinate.column())
                 );
             }
-            cell.reveal();
+            revealAllFrom(cell);
         };
+    }
+
+    private void revealAllFrom(Cell cell) {
+        if (cell.isNeighbour()) {
+            cell.reveal();
+            return;
+        }
+
+        Queue<Cell> queue = new LinkedList<>();
+
+        Set<Cell> visited = new HashSet<>();
+
+        queue.add(cell);
+        visited.add(cell);
+
+        while (!queue.isEmpty()) {
+            Cell current = queue.poll();
+            if (!current.isMine()) {
+                current.reveal();
+            }
+
+            List<Cell> surrounding = surrounding(current);
+
+            for (Cell adjacent : surrounding) {
+                if (!visited.contains(adjacent)) {
+                    queue.add(adjacent);
+                    visited.add(adjacent);
+                }
+            }
+        }
+
+    }
+
+    List<Cell> surrounding(Cell current) {
+        if (current.isNeighbour()) {
+            return Collections.emptyList();
+        }
+        List<Cell> result = new ArrayList<>();
+
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+
+                try {
+                    int newColumn = current.col() + i;
+                    int newRow = current.row() + j;
+                    Coordinate coordinate = new Coordinate(newColumn, newRow, gridSize);
+
+                    cells.stream().filter(c -> c.coordinate().equals(coordinate))
+                                    .findFirst()
+                                    .ifPresent(result::add);
+
+                } catch (InvalidCoordinateException e) {
+                    logger.info(e.getMessage());
+                }
+
+            }
+        }
+
+        return result;
     }
 
     private Optional<Cell> cellFor(Coordinate coordinate) {

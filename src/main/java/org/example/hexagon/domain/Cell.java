@@ -87,4 +87,18 @@ public class Cell {
     public boolean isRevealed() {
         return visibility == Visibility.REVEALED;
     }
+
+    public boolean isHidden() {
+        return visibility == Visibility.HIDDEN;
+    }
+
+    @Override
+    public String toString() {
+        return "Cell{" +
+                "coordinate=" + coordinate +
+                ", cellType=" + cellType +
+                ", neighbouringMines=" + neighbouringMines +
+                ", visibility=" + visibility +
+                '}';
+    }
 }

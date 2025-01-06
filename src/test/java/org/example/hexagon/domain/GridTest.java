@@ -1,7 +1,6 @@
 package org.example.hexagon.domain;
 
 import org.example.adapter.out.console.CellInfo;
-import org.example.adapter.out.console.CellInfoTest;
 import org.example.hexagon.application.port.MineGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,8 +8,8 @@ import org.junit.jupiter.api.Test;
 import java.util.Iterator;
 import java.util.List;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -160,10 +159,44 @@ class GridTest {
         assertThatThrownBy(() -> grid.reveal(coordinate))
                 .isInstanceOf(MineRevealedException.class)
                 .hasMessage("Game Over. Mine revealed: %d %d",
-                        coordinate.column(), coordinate.row());
+                        coordinate.row(), coordinate.column());
     }
 
-    private Coordinate createCoordinate(int row, int column) {
-        return new Coordinate(row, column, gridSize);
+    @Test
+    void revealShouldOnlyShowNonMineCellsAndNotRevealEmptyCellsWithinMineNeighbours() {
+        Coordinate mine1 = createCoordinate(7, 3);
+        Coordinate mine2 = createCoordinate(2, 4);
+        Coordinate mine5 = createCoordinate(2, 9);
+        Coordinate mine4 = createCoordinate(7, 6);
+        Coordinate mine3 = createCoordinate(9, 5);
+        when(mineGenerator.next())
+                .thenReturn(
+                        mine1, mine2, mine3, mine4, mine5
+                );
+
+        grid = new Grid(5, mineGenerator, new GridSize(9, 9));
+
+        grid.reveal(createCoordinate(5, 5));
+
+        List<Cell> revealedCells = grid.cells().stream().filter(Cell::isRevealed).toList();
+        List<Cell> hiddenCells = grid.cells().stream().filter(Cell::isHidden).toList();
+        assertThat(revealedCells).hasSize(71);
+        assertThat(hiddenCells).hasSize(10)
+                .containsExactly(
+                        new Cell(createCoordinate(7, 3), CellType.MINE),
+                        Cell.createNeighbour(createCoordinate(1, 4), 1),
+                        new Cell(createCoordinate(2, 4), CellType.MINE),
+                        Cell.createNeighbour(createCoordinate(7, 4), 1),
+                        Cell.createNeighbour(createCoordinate(7, 5), 1),
+                        new Cell(createCoordinate(8, 5), CellType.MINE),
+                        new Cell(createCoordinate(9, 5), CellType.MINE),
+                        Cell.createNeighbour(createCoordinate(7, 6), 1),
+                        Cell.createNeighbour(createCoordinate(1, 9), 1),
+                        new Cell(createCoordinate(2, 9), CellType.MINE)
+                );
+    }
+
+    private Coordinate createCoordinate(int column, int row) {
+        return new Coordinate(column, row, gridSize);
     }
 }

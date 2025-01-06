@@ -10,9 +10,10 @@ public class CellInfoTest {
     @Test
     void givenRevealedMineShowsX() {
         Cell cell = new Cell(createCoordinate(1, 1), CellType.MINE);
-        cell.reveal();
-        CellInfo cellInfo = CellInfo.from(cell);
 
+        cell.reveal();
+
+        CellInfo cellInfo = CellInfo.from(cell);
         assertThat(cellInfo.display())
                 .isEqualTo("X");
     }
@@ -57,7 +58,7 @@ public class CellInfoTest {
                 .isEqualTo("2");
     }
 
-    private static Coordinate createCoordinate(int row, int column) {
-        return new Coordinate(row, column, new GridSize(9, 9));
+    private static Coordinate createCoordinate(int column, int row) {
+        return new Coordinate(column, row, new GridSize(9, 9));
     }
 }

@@ -4,6 +4,7 @@ import org.example.hexagon.application.MineSweeperService;
 import org.example.hexagon.application.port.Printer;
 import org.example.hexagon.domain.Coordinate;
 import org.example.hexagon.domain.InvalidSelectionException;
+import org.example.hexagon.domain.MineRevealedException;
 
 import java.util.List;
 
@@ -29,6 +30,20 @@ public class MineSweeperController {
 
     public boolean hasWon() {
         return service.hasWon();
+    }
+
+    public void reveal(Coordinate coordinate) {
+        try {
+            service.reveal(coordinate);
+
+            if (service.hasWon()) {
+                printer.print("Congratulations! You found all the mines!");
+            } else {
+                displayCells();
+            }
+        } catch (MineRevealedException e) {
+            printer.print("You stepped on a mine and failed!");
+        }
     }
 
     public void mark(Coordinate coordinate) {
