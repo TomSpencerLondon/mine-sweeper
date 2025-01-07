@@ -198,6 +198,40 @@ class GridTest {
     }
 
     @Test
+    void firstRevealWithThreeMinesAndFirstReviewIsNext() {
+        Coordinate mine1 = createCoordinate(7, 3);
+        Coordinate mine2 = createCoordinate(2, 4);
+        Coordinate mine5 = createCoordinate(2, 9);
+        Coordinate mine4 = createCoordinate(7, 6);
+        Coordinate mine3 = createCoordinate(9, 5);
+        when(mineGenerator.next(anySet()))
+                .thenReturn(
+                        mine1, mine2, mine3, mine4, mine5
+                );
+
+        grid = new Grid(5, mineGenerator, new GridSize(9, 9));
+
+        grid.reveal(createCoordinate(5, 5));
+
+        List<Cell> revealedCells = grid.cells().stream().filter(Cell::isRevealed).toList();
+        List<Cell> hiddenCells = grid.cells().stream().filter(Cell::isHidden).toList();
+        assertThat(revealedCells).hasSize(71);
+        assertThat(hiddenCells).hasSize(10)
+                .containsExactly(
+                        new Cell(createCoordinate(7, 3), CellType.MINE),
+                        Cell.createNeighbour(createCoordinate(1, 4), 1),
+                        new Cell(createCoordinate(2, 4), CellType.MINE),
+                        Cell.createNeighbour(createCoordinate(7, 4), 1),
+                        Cell.createNeighbour(createCoordinate(7, 5), 1),
+                        new Cell(createCoordinate(8, 5), CellType.MINE),
+                        new Cell(createCoordinate(9, 5), CellType.MINE),
+                        Cell.createNeighbour(createCoordinate(7, 6), 1),
+                        Cell.createNeighbour(createCoordinate(1, 9), 1),
+                        new Cell(createCoordinate(2, 9), CellType.MINE)
+                );
+    }
+
+    @Test
     void givenTwoMinesMarkOnMineShowsMine() {
         Coordinate mine = createCoordinate(8, 2);
         when(mineGenerator.next(anySet()))

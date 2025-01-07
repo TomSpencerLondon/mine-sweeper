@@ -1,5 +1,7 @@
 package org.example;
 
+import org.example.adapter.out.console.command.Command;
+import org.example.adapter.out.console.command.CommandFactory;
 import org.example.hexagon.application.GamePrinter;
 import org.example.hexagon.application.MineSweeperController;
 import org.example.hexagon.application.MineSweeperService;
@@ -58,10 +60,10 @@ public class MinesweeperAcceptanceTest {
 
         simulateInput("""
                 3
+                2 2 mine
+                4 4 mine
+                7 7 mine
                 """);
-//        simulateInput("""
-//                5 5 mine
-//                """);
 
         TestableMain.main(new String[0]);
 
@@ -73,6 +75,7 @@ public class MinesweeperAcceptanceTest {
         ).isEqualTo(
                 """
                         How many mines do you want on the field? >\s
+                        
                          |123456789|
                         -|---------|
                         1|.........|
@@ -85,6 +88,52 @@ public class MinesweeperAcceptanceTest {
                         8|.........|
                         9|.........|
                         -|---------|
+                        Set/unset mines marks or claim a cell as free: >
+                        
+                        
+                         |123456789|
+                        -|---------|
+                        1|.........|
+                        2|.*.......|
+                        3|.........|
+                        4|.........|
+                        5|.........|
+                        6|.........|
+                        7|.........|
+                        8|.........|
+                        9|.........|
+                        -|---------|
+                        Set/unset mines marks or claim a cell as free: >
+                        
+                        
+                         |123456789|
+                        -|---------|
+                        1|.........|
+                        2|.*.......|
+                        3|.........|
+                        4|...*.....|
+                        5|.........|
+                        6|.........|
+                        7|.........|
+                        8|.........|
+                        9|.........|
+                        -|---------|
+                        Set/unset mines marks or claim a cell as free: >
+                        
+                        
+                         |123456789|
+                        -|---------|
+                        1|.........|
+                        2|.*.......|
+                        3|.........|
+                        4|...*.....|
+                        5|.........|
+                        6|.........|
+                        7|......*..|
+                        8|.........|
+                        9|.........|
+                        -|---------|
+                        Congratulations! You found all the mines!
                         """
         );
     }
@@ -101,6 +150,11 @@ public class MinesweeperAcceptanceTest {
 
         simulateInput("""
                 4
+                1 7 free
+                1 6 mine
+                3 5 mine
+                5 7 mine
+                5 8 mine
                 """);
 
         TestableMain.main(new String[0]);
@@ -113,6 +167,7 @@ public class MinesweeperAcceptanceTest {
         ).isEqualTo(
                 """
                         How many mines do you want on the field? >\s
+                                    
                          |123456789|
                         -|---------|
                         1|.........|
@@ -125,6 +180,82 @@ public class MinesweeperAcceptanceTest {
                         8|.........|
                         9|.........|
                         -|---------|
+                        Set/unset mines marks or claim a cell as free: >
+                        
+                        
+                         |123456789|
+                        -|---------|
+                        1|.........|
+                        2|.........|
+                        3|.........|
+                        4|.........|
+                        5|.........|
+                        6|.........|
+                        7|1........|
+                        8|.........|
+                        9|.........|
+                        -|---------|
+                        Set/unset mines marks or claim a cell as free: >
+                        
+                        
+                         |123456789|
+                        -|---------|
+                        1|.........|
+                        2|.........|
+                        3|.........|
+                        4|.........|
+                        5|.........|
+                        6|*........|
+                        7|1........|
+                        8|.........|
+                        9|.........|
+                        -|---------|
+                        Set/unset mines marks or claim a cell as free: >
+                        
+                        
+                         |123456789|
+                        -|---------|
+                        1|.........|
+                        2|.........|
+                        3|.........|
+                        4|.........|
+                        5|..*......|
+                        6|*........|
+                        7|1........|
+                        8|.........|
+                        9|.........|
+                        -|---------|
+                        Set/unset mines marks or claim a cell as free: >
+                        
+                        
+                         |123456789|
+                        -|---------|
+                        1|.........|
+                        2|.........|
+                        3|.........|
+                        4|.........|
+                        5|..*......|
+                        6|*........|
+                        7|1...*....|
+                        8|.........|
+                        9|.........|
+                        -|---------|
+                        Set/unset mines marks or claim a cell as free: >
+                        
+                        
+                         |123456789|
+                        -|---------|
+                        1|.........|
+                        2|.........|
+                        3|.........|
+                        4|.........|
+                        5|..*......|
+                        6|*........|
+                        7|1...*....|
+                        8|....*....|
+                        9|.........|
+                        -|---------|
+                        Congratulations! You found all the mines!
                         """
         );
     }
@@ -140,16 +271,28 @@ public class MinesweeperAcceptanceTest {
             int cols = 9;
 
             Scanner scanner = new Scanner(System.in);
-            System.out.print("How many mines do you want on the field? > ");
+            System.out.println("How many mines do you want on the field? > ");
             int numMines = scanner.nextInt();
 
-            Grid grid = new Grid(numMines, mineGenerator, new GridSize(rows, cols));
+            GridSize gridSize = new GridSize(rows, cols);
+            Grid grid = new Grid(numMines, mineGenerator, gridSize);
 
             MineSweeperService mineSweeperService = new MineSweeperService(grid);
             GamePrinter printer = new GamePrinter(rows, cols);
             MineSweeperController mineSweeperController = new MineSweeperController(mineSweeperService, printer);
-
+            CommandFactory commandFactory = new CommandFactory(mineSweeperController);
             mineSweeperController.displayCells();
+
+            while (!mineSweeperController.hasWon()) {
+                printer.print("Set/unset mines marks or claim a cell as free: >\n");
+                if (scanner.hasNextInt()) {
+                    int x = scanner.nextInt();
+                    int y = scanner.nextInt();
+                    String action = scanner.next();
+                    Command command = commandFactory.create(action);
+                    command.execute(new Coordinate(x, y, gridSize));
+                }
+            }
         }
     }
 }

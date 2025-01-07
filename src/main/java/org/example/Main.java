@@ -28,6 +28,7 @@ public class Main {
         MineGenerator randomMineGenerator = new RandomMineGenerator(gridSize, new Random());
         Grid grid = new Grid(numMines, randomMineGenerator, gridSize);
         MineSweeperService mineSweeperService = new MineSweeperService(grid);
+
         Printer printer = new GamePrinter(rows, cols);
         MineSweeperController mineSweeperController = new MineSweeperController(mineSweeperService, printer);
         CommandFactory commandFactory = new CommandFactory(mineSweeperController);
