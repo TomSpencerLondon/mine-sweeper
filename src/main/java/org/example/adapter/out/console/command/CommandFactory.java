@@ -1,6 +1,6 @@
 package org.example.adapter.out.console.command;
 
-import org.example.adapter.out.console.MineSweeperController;
+import org.example.hexagon.application.MineSweeperController;
 
 public class CommandFactory {
     private final MineSweeperController controller;

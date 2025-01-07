@@ -1,5 +1,6 @@
 package org.example.adapter.out.console;
 
+import org.example.hexagon.application.CellInfo;
 import org.example.hexagon.domain.*;
 import org.junit.jupiter.api.Test;
 

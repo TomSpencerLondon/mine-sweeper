@@ -1,11 +1,11 @@
 package org.example;
 
-import org.example.adapter.out.console.GamePrinter;
-import org.example.adapter.out.console.MineSweeperController;
-import org.example.adapter.out.console.RandomMineGenerator;
 import org.example.adapter.out.console.command.Command;
 import org.example.adapter.out.console.command.CommandFactory;
+import org.example.hexagon.application.GamePrinter;
+import org.example.hexagon.application.MineSweeperController;
 import org.example.hexagon.application.MineSweeperService;
+import org.example.hexagon.application.RandomMineGenerator;
 import org.example.hexagon.application.port.MineGenerator;
 import org.example.hexagon.application.port.Printer;
 import org.example.hexagon.domain.Coordinate;

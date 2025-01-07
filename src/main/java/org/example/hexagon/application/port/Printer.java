@@ -1,6 +1,7 @@
 package org.example.hexagon.application.port;
 
-import org.example.adapter.out.console.CellInfo;
+
+import org.example.hexagon.application.CellInfo;
 
 import java.util.List;
 

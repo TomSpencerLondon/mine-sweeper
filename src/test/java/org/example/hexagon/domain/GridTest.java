@@ -1,6 +1,6 @@
 package org.example.hexagon.domain;
 
-import org.example.adapter.out.console.CellInfo;
+import org.example.hexagon.application.CellInfo;
 import org.example.hexagon.application.port.MineGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,6 +10,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -23,7 +24,7 @@ class GridTest {
     @BeforeEach
     void setUp() {
         gridSize = new GridSize(9, 9);
-        when(mineGenerator.next())
+        when(mineGenerator.next(anySet()))
                 .thenReturn(createCoordinate(2, 5), createCoordinate(5, 1));
         grid = new Grid(2, mineGenerator, gridSize);
     }
@@ -50,7 +51,7 @@ class GridTest {
 
     @Test
     void givenFourMinesShowsCorrectNeighbourCount() {
-        when(mineGenerator.next())
+        when(mineGenerator.next(anySet()))
                 .thenReturn(
                         createCoordinate(2, 1),
                         createCoordinate(5, 4),
@@ -79,7 +80,7 @@ class GridTest {
 
     @Test
     void givenSevenMinesShouldReturnCorrectNeighbourCount() {
-        when(mineGenerator.next())
+        when(mineGenerator.next(anySet()))
                 .thenReturn(
                         createCoordinate(2, 2),
                         createCoordinate(2, 4),
@@ -111,7 +112,7 @@ class GridTest {
 
     @Test
     void givenOneMineIncorrectThenCorrectMarkingReturnsWin() {
-        when(mineGenerator.next())
+        when(mineGenerator.next(anySet()))
                 .thenReturn(
                         createCoordinate(1, 2)
                 );
@@ -127,7 +128,7 @@ class GridTest {
 
     @Test
     void givenOneMineAndAllOtherCellsRevealedReturnsWin() {
-        when(mineGenerator.next())
+        when(mineGenerator.next(anySet()))
                 .thenReturn(
                         createCoordinate(1, 2)
                 );
@@ -149,7 +150,7 @@ class GridTest {
     @Test
     void revealMineShouldThrowException() {
         Coordinate coordinate = createCoordinate(1, 2);
-        when(mineGenerator.next())
+        when(mineGenerator.next(anySet()))
                 .thenReturn(
                         coordinate
                 );
@@ -169,7 +170,7 @@ class GridTest {
         Coordinate mine5 = createCoordinate(2, 9);
         Coordinate mine4 = createCoordinate(7, 6);
         Coordinate mine3 = createCoordinate(9, 5);
-        when(mineGenerator.next())
+        when(mineGenerator.next(anySet()))
                 .thenReturn(
                         mine1, mine2, mine3, mine4, mine5
                 );
@@ -199,7 +200,7 @@ class GridTest {
     @Test
     void givenTwoMinesMarkOnMineShowsMine() {
         Coordinate mine = createCoordinate(8, 2);
-        when(mineGenerator.next())
+        when(mineGenerator.next(anySet()))
                 .thenReturn(
                         mine
                 );
@@ -218,7 +219,7 @@ class GridTest {
     @Test
     void givenMineShowsMine() {
         Coordinate mine = createCoordinate(1, 6);
-        when(mineGenerator.next())
+        when(mineGenerator.next(anySet()))
                 .thenReturn(
                         mine
                 );

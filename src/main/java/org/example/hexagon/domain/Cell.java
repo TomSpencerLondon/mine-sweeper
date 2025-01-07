@@ -96,6 +96,16 @@ public class Cell {
         return visibility == Visibility.HIDDEN;
     }
 
+    public void empty() {
+        neighbouringMines = 0;
+        this.cellType = CellType.EMPTY;
+    }
+
+    public void firstReveal() {
+        visibility = Visibility.REVEALED;
+        cellType = CellType.EMPTY;
+    }
+
     @Override
     public String toString() {
         return "Cell{" +
@@ -104,5 +114,27 @@ public class Cell {
                 ", neighbouringMines=" + neighbouringMines +
                 ", visibility=" + visibility +
                 '}';
+    }
+
+    public void decrementNeighbourCount() {
+        neighbouringMines--;
+    }
+
+    public void incrementCount() {
+        neighbouringMines++;
+    }
+
+    public void convertToNeighbour() {
+        neighbouringMines = 1;
+        cellType = CellType.NEIGHBOUR;
+    }
+
+    public void convertToMine() {
+        neighbouringMines = 0;
+        cellType = CellType.MINE;
+    }
+
+    public void hide() {
+        visibility = Visibility.HIDDEN;
     }
 }

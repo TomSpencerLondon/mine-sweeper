@@ -1,4 +1,5 @@
-package org.example.adapter.out.console;
+package org.example.hexagon.application;
+
 
 import org.example.hexagon.application.port.Printer;
 

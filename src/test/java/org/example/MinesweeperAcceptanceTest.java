@@ -1,9 +1,9 @@
 package org.example;
 
-import org.example.adapter.out.console.GamePrinter;
-import org.example.adapter.out.console.MineSweeperController;
-import org.example.adapter.out.console.RandomMineGenerator;
+import org.example.hexagon.application.GamePrinter;
+import org.example.hexagon.application.MineSweeperController;
 import org.example.hexagon.application.MineSweeperService;
+import org.example.hexagon.application.RandomMineGenerator;
 import org.example.hexagon.application.port.MineGenerator;
 import org.example.hexagon.domain.Coordinate;
 import org.example.hexagon.domain.Grid;
@@ -18,6 +18,7 @@ import java.io.PrintStream;
 import java.util.Scanner;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -49,7 +50,7 @@ public class MinesweeperAcceptanceTest {
 
     @Test
     void givenThreeMinesReturnsCorrectOutput() {
-        when(mineGenerator.next())
+        when(mineGenerator.next(anySet()))
                 .thenReturn(
                         createCoordinate(2, 2),
                         createCoordinate(4, 4),
@@ -91,7 +92,7 @@ public class MinesweeperAcceptanceTest {
 
     @Test
     void givenFourMinesReturnsCorrectOutput() {
-        when(mineGenerator.next())
+        when(mineGenerator.next(anySet()))
                 .thenReturn(
                         createCoordinate(1, 6),
                         createCoordinate(3, 5),
